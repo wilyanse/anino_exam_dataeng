@@ -4,7 +4,7 @@
 SELECT 
     COUNT(DISTINCT event_user)
 FROM
-    df;
+    game_data;
 
 -- Question 2
 -- SQL query to get average number of slot machines per session
@@ -15,7 +15,7 @@ FROM
         session_id,
             COUNT(DISTINCT session_token) AS number_of_slot_machines
     FROM
-        df
+        game_data
     GROUP BY session_id);
 
 -- SQL query to get the average number of spins per machine session
@@ -25,7 +25,7 @@ FROM
     (SELECT 
         session_token, COUNT(*) AS spins_count
     FROM
-        df
+        game_data
     GROUP BY session_token);
 
 -- Question 3
@@ -35,9 +35,9 @@ SELECT
     (COUNT(*) / (SELECT 
             COUNT(*)
         FROM
-            df)) AS win_type_count
+            game_data)) AS win_type_count
 FROM
-    df
+    game_data
 GROUP BY win_type;
 
 -- Question 4
