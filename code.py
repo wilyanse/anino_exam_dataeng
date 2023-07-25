@@ -62,3 +62,21 @@ print("Average number of spins per machine session: " + str(query_sessionspins['
 ''')
 print("Table of win_types and their respective probabilities: ")
 print(query_probability_wintypes) """
+
+# Fourth question
+# code returns an error due to pandasql but works fine in SQL
+""" query_retention = pysqldf('''
+    SELECT 
+        count_more_than_24_hours / total_count AS retention_rate
+    FROM 
+    (
+        SELECT COUNT(DISTINCT event_user) AS count_more_than_24_hours
+        FROM game_data
+        WHERE event_time > install_date + INTERVAL 24 HOUR
+    ) AS subquery1
+    CROSS JOIN 
+    (
+        SELECT COUNT(DISTINCT event_user) AS total_count
+        FROM game_data
+    ) AS subquery2
+''') """

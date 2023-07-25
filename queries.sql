@@ -26,3 +26,18 @@ FROM (
 SELECT win_type, (COUNT(*)/ (SELECT COUNT(*) FROM df)) AS win_type_count
 FROM df
 GROUP BY win_type;
+
+-- Question 4
+-- SQL query to get the retention rate
+SELECT  count_more_than_24_hours / total_count AS retention_rate
+FROM 
+  (
+    SELECT COUNT(DISTINCT event_user) AS count_more_than_24_hours
+    FROM game_data
+    WHERE event_time > install_date + INTERVAL 24 HOUR
+  ) AS subquery1
+CROSS JOIN 
+  (
+    SELECT COUNT(DISTINCT event_user) AS total_count
+    FROM game_data
+  ) AS subquery2
