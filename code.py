@@ -1,21 +1,31 @@
 import pandas as pd
 import pandasql as ps
 
+# change path as needed to point at the csv file
 path = r'E:\Code\anino_exam_dataeng\AninoDataEngineerExam\dataengineering-test-data.csv'
 
+# copied code
+# hash map to store cached dates
+# repeating dates are stored in cache in order to improve performance
 cache = {}
 
+# changes from string to datetime format in the data frame
 def cached_date_parser(s):
     if s in cache:
         return cache[s]
     dt = pd.to_datetime(s, format='%Y%m%d', errors='coerce')
     cache[s] = dt
     return dt
-    
+
+# reads csv file according to path
 df = pd.read_csv(path)
+
+# changes install date and event time to datetime values
 df['install_date'] = pd.to_datetime(df['install_date'])
 df['event_time'] = pd.to_datetime(df['event_time'])
 
+# pandasmysql
+# uses SQLite and function is used in order to easily input SQL queries
 pysqldf = lambda q: ps.sqldf(q, globals())
 
 # First question
