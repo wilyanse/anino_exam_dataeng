@@ -63,7 +63,7 @@ query_sessionspins = pysqldf('''
 print("Average number of spins per machine session: " + str(query_sessionspins['average_spins_count'][0])) """
 
 # Third question
-# does not work because pandasql converts win_type_count to int for some reason instead of float
+# does not return correct values because pandasql converts win_type_count to int for some reason instead of float
 # query still works in SQL
 """ query_probability_wintypes = pysqldf('''
     SELECT win_type, (COUNT(*)/ (SELECT COUNT(*) FROM df)) AS win_type_count
@@ -94,7 +94,6 @@ print(query_probability_wintypes) """
 print(query_retention) """
 
 # Fifth question
-# code returns an error due to pandasql but works in in SQL
 """ query_avg_rtp = pysqldf('''
     SELECT AVG(rtp) AS avg_rtp
     FROM (
