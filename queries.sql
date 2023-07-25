@@ -41,3 +41,15 @@ CROSS JOIN
     SELECT COUNT(DISTINCT event_user) AS total_count
     FROM game_data
   ) AS subquery2
+
+-- Question 5
+-- SQL query to get the average RTP
+SELECT AVG(rtp) AS avg_rtp
+FROM (
+	SELECT total_winnings / total_bettings as rtp
+    FROM (
+		SELECT slotmachine_id, SUM(amount) AS total_winnings, SUM(total_bet_amount) AS total_bettings
+        FROM game_data
+        GROUP BY slotmachine_id
+    ) AS summary
+) AS rtp_calc

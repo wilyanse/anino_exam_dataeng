@@ -80,3 +80,18 @@ print(query_probability_wintypes) """
         FROM game_data
     ) AS subquery2
 ''') """
+
+# Fifth question
+# code returns an error due to pandasql but works in in SQL
+query_avg_rtp = pysqldf('''
+    SELECT AVG(rtp) AS avg_rtp
+    FROM (
+        SELECT total_winnings / total_bettings as rtp
+        FROM (
+            SELECT slotmachine_id, SUM(amount) AS total_winnings, SUM(total_bet_amount) AS total_bettings
+            FROM game_data
+            GROUP BY slotmachine_id
+        ) AS summary
+    ) AS rtp_calc
+''')
+print(query_avg_rtp)
