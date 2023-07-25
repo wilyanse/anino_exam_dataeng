@@ -21,7 +21,9 @@ print(df.dtypes)
 
 pysqldf = lambda q: ps.sqldf(q, globals())
 
-print(pysqldf('''
+query_uniqueplayers = pysqldf('''
     SELECT COUNT(DISTINCT event_user)
-   FROM df
-'''))
+    FROM df
+''')
+
+print("Unique players in the data: " + str(query_uniqueplayers['COUNT(DISTINCT event_user)'][0]))
