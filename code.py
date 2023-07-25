@@ -71,27 +71,29 @@ print(query_probability_wintypes) """
     FROM 
     (
         SELECT COUNT(DISTINCT event_user) AS count_more_than_24_hours
-        FROM game_data
+        FROM df
         WHERE event_time > install_date + INTERVAL 24 HOUR
     ) AS subquery1
     CROSS JOIN 
     (
         SELECT COUNT(DISTINCT event_user) AS total_count
-        FROM game_data
+        FROM df
     ) AS subquery2
-''') """
+''')
+
+print(query_retention) """
 
 # Fifth question
 # code returns an error due to pandasql but works in in SQL
-query_avg_rtp = pysqldf('''
+""" query_avg_rtp = pysqldf('''
     SELECT AVG(rtp) AS avg_rtp
     FROM (
         SELECT total_winnings / total_bettings as rtp
         FROM (
             SELECT slotmachine_id, SUM(amount) AS total_winnings, SUM(total_bet_amount) AS total_bettings
-            FROM game_data
+            FROM df
             GROUP BY slotmachine_id
         ) AS summary
     ) AS rtp_calc
 ''')
-print(query_avg_rtp)
+print("Average RTP for each slot machine: " + str(query_avg_rtp['avg_rtp'][0])) """
