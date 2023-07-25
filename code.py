@@ -16,14 +16,38 @@ df = pd.read_csv(path)
 df['install_date'] = pd.to_datetime(df['install_date'])
 df['event_time'] = pd.to_datetime(df['event_time'])
 
-print(df.shape)
-print(df.dtypes)
-
 pysqldf = lambda q: ps.sqldf(q, globals())
 
-query_uniqueplayers = pysqldf('''
-    SELECT COUNT(DISTINCT event_user)
+# First question
+
+""" query_uniqueplayers = pysqldf('''
+    SELECT COUNT(DISTINCT event_user) as distinct_users
     FROM df
 ''')
 
-print("Unique players in the data: " + str(query_uniqueplayers['COUNT(DISTINCT event_user)'][0]))
+print("Unique players in the data: " + str(query_uniqueplayers['distinct_users'][0])) """
+
+# Second question
+# A
+query_sessionslots = pysqldf('''
+    SELECT AVG(number_of_slot_machines) AS average_number_of_slot_machines
+    FROM (
+        SELECT session_id, COUNT(DISTINCT session_token) AS number_of_slot_machines
+        FROM df
+        GROUP BY session_id
+    )
+''')
+
+print("Average number of slot machines a player plays in a session: " + str(query_sessionslots['average_number_of_slot_machines'][0]))
+
+# B
+query_sessionspins = pysqldf('''
+    SELECT AVG(spins_count) AS average_spins_count
+    FROM (
+        SELECT session_token, COUNT(*) AS spins_count
+        FROM df
+        GROUP BY session_token
+    )
+''')
+
+print("Average number of spins per machine session: " + str(query_sessionspins['average_spins_count'][0]))
