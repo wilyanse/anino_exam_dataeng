@@ -84,7 +84,6 @@ print(query_probability_wintypes) """
 print(query_retention) """
 
 # Fifth question
-# code returns an error due to pandasql but works in in SQL
 """ query_avg_rtp = pysqldf('''
     SELECT AVG(rtp) AS avg_rtp
     FROM (
