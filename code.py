@@ -28,7 +28,7 @@ pysqldf = lambda q: ps.sqldf(q, globals())
 print("Unique players in the data: " + str(query_uniqueplayers['distinct_users'][0])) """
 
 # Second question
-# A
+""" # A
 query_sessionslots = pysqldf('''
     SELECT AVG(number_of_slot_machines) AS average_number_of_slot_machines
     FROM (
@@ -50,4 +50,15 @@ query_sessionspins = pysqldf('''
     )
 ''')
 
-print("Average number of spins per machine session: " + str(query_sessionspins['average_spins_count'][0]))
+print("Average number of spins per machine session: " + str(query_sessionspins['average_spins_count'][0])) """
+
+# Third question
+# does not work because pandasql converts win_type_count to int for some reason instead of float
+# query still works in SQL
+""" query_probability_wintypes = pysqldf('''
+    SELECT win_type, (COUNT(*)/ (SELECT COUNT(*) FROM df)) AS win_type_count
+    FROM df
+    GROUP BY win_type
+''')
+print("Table of win_types and their respective probabilities: ")
+print(query_probability_wintypes) """

@@ -20,3 +20,9 @@ FROM (
     FROM df
     GROUP BY session_token
 );
+
+-- Question 3
+-- SQL query to get the probability of hitting the various win_types
+SELECT win_type, (COUNT(*)/ (SELECT COUNT(*) FROM df)) AS win_type_count
+FROM df
+GROUP BY win_type;
