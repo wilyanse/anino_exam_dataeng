@@ -30,15 +30,18 @@ pysqldf = lambda q: ps.sqldf(q, globals())
 
 # First question
 
-""" query_uniqueplayers = pysqldf('''
+"""
+query_uniqueplayers = pysqldf('''
     SELECT COUNT(DISTINCT event_user) as distinct_users
     FROM df
 ''')
 
-print("Unique players in the data: " + str(query_uniqueplayers['distinct_users'][0])) """
+print("Unique players in the data: " + str(query_uniqueplayers['distinct_users'][0]))
+"""
 
 # Second question
-""" # A
+"""
+# A
 query_sessionslots = pysqldf('''
     SELECT AVG(number_of_slot_machines) AS average_number_of_slot_machines
     FROM (
@@ -60,20 +63,24 @@ query_sessionspins = pysqldf('''
     )
 ''')
 
-print("Average number of spins per machine session: " + str(query_sessionspins['average_spins_count'][0])) """
+print("Average number of spins per machine session: " + str(query_sessionspins['average_spins_count'][0]))
+"""
 
 # Third question
 # does not return correct values because pandasql converts win_type_count to int for some reason instead of float
 # query still works in SQL
-""" query_probability_wintypes = pysqldf('''
+"""
+query_probability_wintypes = pysqldf('''
     SELECT win_type, (COUNT(*)/ (SELECT COUNT(*) FROM df)) AS win_type_count
     FROM df
     GROUP BY win_type
 ''')
 print("Table of win_types and their respective probabilities: ")
-print(query_probability_wintypes) """
+print(query_probability_wintypes)
+"""
 
-""" # pandas code similar to the sql query above but does not have errors
+"""
+# pandas code similar to the sql query above but does not have errors
 # calculates the COUNT of each 'win_type'
 win_type_counts = df['win_type'].value_counts()
 
@@ -104,9 +111,11 @@ print(result_df) """
     ) AS subquery2
 ''')
 
-print(query_retention['retention_rate'][0]) """
+print(query_retention['retention_rate'][0])
+"""
 
-""" # pandas code that returns the same result as the SQL query
+"""
+# pandas code that returns the same result as the SQL query
 # Calculate count_more_than_24_hours by filtering the data frame of those that have spun since the 24 hour mark
 filtered_data = df[df['event_time'] > df['install_date'] + pd.Timedelta(hours=24)]
 # only take unique users
@@ -118,12 +127,14 @@ total_count = df['event_user'].nunique()
 # Calculate retention_rate
 retention_rate = (count_more_than_24_hours / total_count) * 100
 
-print("The retention rate of the game is: " + str(retention_rate)) """
+print("The retention rate of the game is: " + str(retention_rate))
+"""
 
 # Fifth question
 # code below does not work due to pandasql having operational errors
 # works fine in mySQL
-""" query_avg_rtp = pysqldf('''
+"""
+query_avg_rtp = pysqldf('''
     SELECT 
         slotmachine_id, AVG(rtp) AS avg_rtp
     FROM
@@ -137,10 +148,12 @@ print("The retention rate of the game is: " + str(retention_rate)) """
         slotmachine_id
 ''')
 print("Average RTP for each slot machine: ")
-print(query_avg_rtp)"""
+print(query_avg_rtp)
+"""
 
 # converted mySQL query into similar pandas code
-""" df['rtp'] = df['amount'] / df['total_bet_amount']
+"""
+df['rtp'] = df['amount'] / df['total_bet_amount']
 
 # Group by 'slotmachine_id' and calculates the average 'rtp' per slotmachine_id
 summary_df = df.groupby('slotmachine_id')['rtp'].mean().reset_index()
@@ -148,4 +161,5 @@ summary_df = df.groupby('slotmachine_id')['rtp'].mean().reset_index()
 # Rename the 'rtp' column to 'avg_rtp'
 summary_df.rename(columns={'rtp': 'avg_rtp'}, inplace=True)
 
-print(summary_df) """
+print(summary_df)
+"""
