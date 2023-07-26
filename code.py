@@ -73,6 +73,19 @@ print("Average number of spins per machine session: " + str(query_sessionspins['
 print("Table of win_types and their respective probabilities: ")
 print(query_probability_wintypes) """
 
+""" # pandas code similar to the sql query above but does not have errors
+# calculates the COUNT of each 'win_type'
+win_type_counts = df['win_type'].value_counts()
+
+# calculate the total number of rows in the DataFrame
+total_count = len(df)
+
+# calculate the 'win_type_count' as count of each 'win_type' divided by the total count
+result_df = pd.DataFrame({'win_type': win_type_counts.index, 'win_type_count': win_type_counts.values / total_count})
+
+print("Table of win_types and their respective probabilities: ")
+print(result_df) """
+
 # Fourth question
 # code returns an error due to pandasql but works fine in SQL
 """ query_retention = pysqldf('''
@@ -91,18 +104,48 @@ print(query_probability_wintypes) """
     ) AS subquery2
 ''')
 
-print(query_retention) """
+print(query_retention['retention_rate'][0]) """
+
+""" # pandas code that returns the same result as the SQL query
+# Calculate count_more_than_24_hours by filtering the data frame of those that have spun since the 24 hour mark
+filtered_data = df[df['event_time'] > df['install_date'] + pd.Timedelta(hours=24)]
+# only take unique users
+count_more_than_24_hours = filtered_data['event_user'].nunique()
+
+# calculate unique users
+total_count = df['event_user'].nunique()
+
+# Calculate retention_rate
+retention_rate = (count_more_than_24_hours / total_count) * 100
+
+print("The retention rate of the game is: " + str(retention_rate)) """
 
 # Fifth question
+# code below does not work due to pandasql having operational errors
+# works fine in mySQL
 """ query_avg_rtp = pysqldf('''
-    SELECT AVG(rtp) AS avg_rtp
-    FROM (
-        SELECT total_winnings / total_bettings as rtp
-        FROM (
-            SELECT slotmachine_id, SUM(amount) AS total_winnings, SUM(total_bet_amount) AS total_bettings
-            FROM df
-            GROUP BY slotmachine_id
+    SELECT 
+        slotmachine_id, AVG(rtp) AS avg_rtp
+    FROM
+        (SELECT 
+            slotmachine_id,
+                amount / total_bet_amount AS rtp
+        FROM
+            game_data
         ) AS summary
-    ) AS rtp_calc
+    GROUP BY
+        slotmachine_id
 ''')
-print("Average RTP for each slot machine: " + str(query_avg_rtp['avg_rtp'][0])) """
+print("Average RTP for each slot machine: ")
+print(query_avg_rtp)"""
+
+# converted mySQL query into similar pandas code
+""" df['rtp'] = df['amount'] / df['total_bet_amount']
+
+# Group by 'slotmachine_id' and calculates the average 'rtp' per slotmachine_id
+summary_df = df.groupby('slotmachine_id')['rtp'].mean().reset_index()
+
+# Rename the 'rtp' column to 'avg_rtp'
+summary_df.rename(columns={'rtp': 'avg_rtp'}, inplace=True)
+
+print(summary_df) """
